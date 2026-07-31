@@ -4,11 +4,52 @@ const https = require('https');
 const BOT_TOKEN = process.env.BOT_TOKEN; 
 const CHAT_ID = process.env.CHAT_ID; 
 const PORT = process.env.PORT || 3000; 
+const SECRET_KEY = "0x4AAAAAAECZAtlnlOqhzbdwWhj0CFJoVWQ"; // Your Turnstile Secret Key
 
 if (!BOT_TOKEN || !CHAT_ID) { 
   console.error("Error, no variables detected"); 
   process.exit(1); 
 } 
+
+// Native HTTPS helper to validate Turnstile without dependencies
+function validateTurnstile(token, remoteip) {
+  return new Promise((resolve) => {
+    const payload = JSON.stringify({
+      secret: SECRET_KEY,
+      response: token,
+      remoteip: remoteip
+    });
+
+    const options = {
+      hostname: 'challenges.cloudflare.com',
+      path: '/turnstile/v0/siteverify',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(body));
+        } catch (e) {
+          resolve({ success: false, "error-codes": ["json-parse-error"] });
+        }
+      });
+    });
+
+    req.on('error', () => {
+      resolve({ success: false, "error-codes": ["network-error"] });
+    });
+
+    req.write(payload);
+    req.end();
+  });
+}
 
 const server = http.createServer((req, res) => { 
   res.setHeader('Access-Control-Allow-Origin', '*'); 
@@ -28,15 +69,32 @@ const server = http.createServer((req, res) => {
       body += chunk.toString(); 
     }); 
 
-    req.on('end', () => { 
+    req.on('end', async () => { // Marked as async to await captcha validation
       try { 
-        const { name, email, message } = JSON.parse(body); 
-        const textTelegram = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`; 
+        // Expecting 'cfTurnstileToken' passed from your script.js frontend data object
+        const { name, email, message, cfTurnstileToken } = JSON.parse(body); 
+
+        if (!cfTurnstileToken) {
+          res.writeHead(400, {'Content-Type': 'application/json'});
+          res.end(JSON.stringify({error: "Missing Turnstile Token"}));
+          return;
+        }
+
+        // Get user IP from request headers safely
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+        // Run Turnstile verification block
+        const captchaResult = await validateTurnstile(cfTurnstileToken, ip);
+
+        if (!captchaResult.success) {
+          res.writeHead(403, {'Content-Type': 'application/json'});
+          res.end(JSON.stringify({error: "Captcha validation failed", details: captchaResult["error-codes"]}));
+          return;
+        }
         
-        const telegramData = JSON.stringify({ 
-          chat_id: CHAT_ID, 
-          text: textTelegram 
-        });
+        // If Captcha passes, proceed to fire Telegram request
+        const textTelegram = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`; 
+        const telegramData = JSON.stringify({ chat_id: CHAT_ID, text: textTelegram }); 
 
         const options = { 
           hostname: 'api.telegram.org', 
@@ -49,10 +107,9 @@ const server = http.createServer((req, res) => {
         }; 
 
         const telegramReq = https.request(options, (telegramRes) => { 
-          let telegramBody = '';
-          telegramRes.on('data', d => telegramBody += d);
-          
-          telegramRes.on('end', () => {
+          let telegramBody = ''; 
+          telegramRes.on('data', d => telegramBody += d); 
+          telegramRes.on('end', () => { 
             if (telegramRes.statusCode === 200) { 
               res.writeHead(200, {'Content-Type': 'application/json'}); 
               res.end(JSON.stringify({success: true})); 
@@ -60,7 +117,7 @@ const server = http.createServer((req, res) => {
               res.writeHead(500, {'Content-Type': 'application/json'}); 
               res.end(JSON.stringify({error: 'Error in telegrams api', details: telegramBody})); 
             } 
-          });
+          }); 
         }); 
 
         telegramReq.on('error', (e) => { 
@@ -85,29 +142,3 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => { 
   console.log(`Server running on port ${PORT}`); 
 });
-const SECRET_KEY = "0x4AAAAAAECZAtlnlOqhzbdwWhj0CFJoVWQ";
-
-async function validateTurnstile(token, remoteip) {
-	try {
-		const response = await fetch(
-			"https://challenges.cloudflare.com/turnstile/v0/siteverify",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					secret: SECRET_KEY,
-					response: token,
-					remoteip: remoteip,
-				}),
-			},
-		);
-
-		const result = await response.json();
-		return result;
-	} catch (error) {
-		console.error("Turnstile validation error:", error);
-		return { success: false, "error-codes": ["internal-error"] };
-	}
-}
