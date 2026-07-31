@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script
+	src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+	async
+	defer
+></script>
+<link rel="preconnect" href="https://challenges.cloudflare.com" />
+</head>
+<body>
+     <header>
+        <h1><strong>Enrique</strong> Garcia</h1>
+        <nav>
+            <a href="index.html#about">About</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <br>
+    </header>
+    <div class="panel-no-flex">
+        <h1>
+            Hi, contact me via:
+        </h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h2>Mail: <a href="mailto:enrique@oropezas.com">enrique@oropezas.com</a></h2>
+        <h2>Instagram: <a href="https://instagram.com/enriquegarciaou">@enriquegarciaou</a><h2></h2>
+        <h2>Or via this form:</h2>
+        <form id="contact-form">
+            <input type="Text" id="name" placeholder="Name" required>
+            <input type="Email" id="email" placeholder="Email" required>
+            <textarea id="message" placeholder="Message" required></textarea>
+            <div
+		class="cf-turnstile"
+		data-sitekey="0x4AAAAAAECZAptpDFzv1LnJ"
+		data-theme="auto"
+		data-size="flexible"
+		data-callback="onTurnstileSuccess"
+		data-error-callback="onTurnstileError"
+		data-expired-callback="onTurnstileExpired"
+	></div>
+	<button type="submit" id="submit-btn" disabled>Send Message</button>
+</form>
+
+<script>
+	function onTurnstileSuccess(token) {
+		console.log("Turnstile success:", token);
+		document.getElementById("submit-btn").disabled = false;
+	}
+	function onTurnstileError(errorCode) {
+		console.error("Turnstile error:", errorCode);
+		document.getElementById("submit-btn").disabled = true;
+	}
+	function onTurnstileExpired() {
+		console.warn("Turnstile token expired");
+		document.getElementById("submit-btn").disabled = true;
+	}
+</script>
+        <h2> Donate to my HackClub:
+        <a href="https://hcb.hackclub.com/donations/start/oropezas-robotics-engineering-and-programing-club">Donate!</a>
+        </h2>
+        
+        </div>
+    </div>
+
+</body>
+</html>
