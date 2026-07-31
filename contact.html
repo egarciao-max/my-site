@@ -6,6 +6,12 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <script
+	src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+	async
+	defer
+></script>
+<link rel="preconnect" href="https://challenges.cloudflare.com" />
 </head>
 <body>
      <header>
@@ -35,8 +41,32 @@
             <input type="Text" id="name" placeholder="Name" required>
             <input type="Email" id="email" placeholder="Email" required>
             <textarea id="message" placeholder="Message" required></textarea>
-            <button type="submit">Send</button>
-        </form>
+            <div
+		class="cf-turnstile"
+		data-sitekey="0x4AAAAAAECZAptpDFzv1LnJ"
+		data-theme="auto"
+		data-size="flexible"
+		data-callback="onTurnstileSuccess"
+		data-error-callback="onTurnstileError"
+		data-expired-callback="onTurnstileExpired"
+	></div>
+	<button type="submit" id="submit-btn" disabled>Send Message</button>
+</form>
+
+<script>
+	function onTurnstileSuccess(token) {
+		console.log("Turnstile success:", token);
+		document.getElementById("submit-btn").disabled = false;
+	}
+	function onTurnstileError(errorCode) {
+		console.error("Turnstile error:", errorCode);
+		document.getElementById("submit-btn").disabled = true;
+	}
+	function onTurnstileExpired() {
+		console.warn("Turnstile token expired");
+		document.getElementById("submit-btn").disabled = true;
+	}
+</script>
         <h2> Donate to my HackClub:
         <a href="https://hcb.hackclub.com/donations/start/oropezas-robotics-engineering-and-programing-club">Donate!</a>
         </h2>
