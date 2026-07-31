@@ -56,6 +56,20 @@
             border: 1px solid rgba(0, 0, 0, 0.25);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
+            .photo-panel-gryffindor{
+            width: 100px;
+            height: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transform: rotate(-45deg);
+            z-index: 2;
+            position: absolute;
+            top: -100%;
+            left: 190%;
+            overflow: hidden;
+
+        }
         a {
             text-decoration: none;
             color: rgb(255, 255, 255);
@@ -119,21 +133,84 @@
             height: 100%;
             object-fit: cover;
         }
+        nav {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            font-family: "Dancing Script", cursive;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 2;
+            position: absolute;
+
+        }
+        header strong {
+            color: rgb(131, 254, 186);
+        }
+        .logo {
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100px;
+            background-color: rgba(43, 42, 56);
+            align-content: center;
+            overflow: hidden;
+
+        }
+            /*AI */    
+        .has-sticker {
+            position: relative !important;
+        }
+
+         /*AI */
+        .sticker {
+            position: absolute;
+            pointer-events: none; 
+            width: 75px;
+            height: 75px;
+        }
+
+       /*AI */
+        .sticker.top-left     { top: -10px;    left: -10px; }
+        .sticker.top-right    { top: -10px;    right: -10px; }
+        .sticker.bottom-left  { bottom: -10px; left: -10px; }
+        .sticker.bottom-right { bottom: -10px; right: -10px; }
+
     </style>
 </head>
 <body>
     <header>
-        <h1>My Personal Site</h1>
+        <div class="logo"><h1><strong>Enrique</strong> Garcia <img src="https://www.pngarts.com/files/11/Harry-Potter-Gryffindor-Logo-PNG-Photo.png" alt="Gryffindor Logo" class="photo-panel-gryffindor">
+        </h1>
+        </div>
         <nav>
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
         </nav>
         <br>
     </header>
     <section id="home">
-        <div class="panel">
+        <div class="panel has-sticker">
+            
         <h2>Hi, I'm <i class="dancing-script">Enrique</i>,  I like to eat.</h2>
         <img src="https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFjb3xlbnwwfHwwfHx8MA%3D%3D" alt="Tacos" class="photo-panel">
+        <img src="https://assets.stickpng.com/thumbs/58967def0803320bf17c2fb6.png" alt="sticker" class="sticker top-left">
+        
         </div>
         <br>
         <br>
@@ -157,7 +234,9 @@
     <div class="panel">
         
     <h2>About Me</h2>
-    <p>Hi, My name is <i class="dancing-script-small">Enrique</i>, im 15 years old, Im from Mexico, and I like tacos.</p>
+    <p>Hi, My name is <i class="dancing-script-small">Enrique</i>, im 15 years old, Im from Mexico, and I like tacos. I'm a really big fan of <i class="dancing-script-small">Harry Potter</i> my house from Wizarding World Test was actually Gryffindor<p>
+        <img src="https://cdn.hackclub.com/019fb559-135d-79f3-b39a-475a47dc8736/wizarding-world-portrait.png" alt="Wizarding World Avatar" class="photo-panel">
+        </div>
     </div>
     <br>
     
