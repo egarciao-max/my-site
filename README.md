@@ -1,15 +1,22 @@
-The use of Ai was used on the stickers css, and on some minor error correction.
+The use of Ai was used on the stickers css, CLOUDFLARRE CONVERSION (i did not understand anything on how to do it) and on some minor error correction.
 
 the skeleton of this project is
 
-index.html
-contact.html
-blog.html
-script.js
-server.js
-style.js
-  /Blogs
-      Hi.html
+personal-site-cloudflare/
+├── public/
+│   ├── Blogs/
+│   │   └── Hi.html
+│   ├── index.html
+│   ├── blog.html
+│   ├── contact.html
+│   ├── script.js
+│   └── style.css
+├── src/
+│   └── index.js
+├── wrangler.jsonc
+├── package.json
+├── package-lock.json
+
 
 
       
