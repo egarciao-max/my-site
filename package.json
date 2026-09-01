@@ -9,5 +9,10 @@
   },
   "devDependencies": {
     "wrangler": "latest"
+  },
+  "dependencies": {
+    "chanfana": "^3.4.0",
+    "hono": "^4.13.5",
+    "zod": "^4.5.4"
   }
 }

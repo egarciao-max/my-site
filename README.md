@@ -17,14 +17,13 @@ personal-site-cloudflare/
 ├── package.json
 ├── package-lock.json
 
-
-
-      
 for this project I wanted to do a blog/personal site with my contact info and a donation page for my hackclub
 
 server is used for telegram bot using the variables: BOT_TOKEN and CHAT_ID.
 
 endpoint is: /api/send-telegram
 
-
 addded trunstile implementation
+
+
+added ai chatbot
